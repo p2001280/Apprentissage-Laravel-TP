@@ -1,8 +1,17 @@
 @extends('admin.admin')
 
+@section('title', 'Tous les biens')
+
 @section('content')
 
-<h1>Les biens</h1>
+<div class="d-flex justify-content-between align-items">
+    <div>
+        <h1>@yield('title')</h1>
+    </div>
+    <div>
+        <a href="{{ route('admin.property.create')}}" class="btn btn-primary">Ajouter un bien</a>
+    </div>
+</div>
 
 <table class="table table-stripped">
     <thead>
@@ -19,8 +28,12 @@
         <tr>
             <td>{{ $property->title }}</td>
             <td>{{ $property->surface }}m²</td>
-            <td>{{ number_format($property->price, thousand_separator: ' ') }}</td>
+            {{-- <td>{{ number_format($property->price, thousand_separator: ' ') }}</td> --}}
             <td>{{ $property->city }}</td>
         </tr>
+    @endforeach
     </tbody>
 </table>
+
+{{ $properties->links() }}
+@endsection
