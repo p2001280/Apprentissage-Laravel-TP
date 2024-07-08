@@ -3,7 +3,9 @@ $type ??= 'text';
 $class ??= null;
 $name ??=  '';   
 $value ??= '';
-$label = ucfirst($name);
+if(!isset($label)) {
+    $label = ucfirst($name);
+}
 @endphp
 
 <div @class(['form-group', $class])>

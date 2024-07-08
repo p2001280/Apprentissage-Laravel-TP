@@ -15,7 +15,7 @@ class PropertyController extends Controller
     public function index()
     {
         return view('admin.properties.index', [
-            'properties' => Property::orderBy('created_at', 'desc')->paginate(1)
+            'properties' => Property::orderBy('created_at', 'desc')->paginate(3)
         ]);
     }
 
@@ -46,6 +46,7 @@ class PropertyController extends Controller
     public function store(PropertyFormRequest $request)
     {
         $property = Property::create($request->validated());
+        $property->options()->sync($request->validated('options'));
         return redirect()->route('admin.property.index')->with('success', 'Le bien a bien été créé');
     }
 
@@ -73,6 +74,7 @@ class PropertyController extends Controller
      */
     public function update(PropertyFormRequest $request, Property $property)
     {
+        $property->options()->sync($request->validated('options'));
         $property->update($request->validated());
         return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié avec succès !');
     }
