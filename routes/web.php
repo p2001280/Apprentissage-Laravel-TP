@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\AuthController;
-
 /*
-
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
@@ -16,6 +15,21 @@ use App\Http\Controllers\AuthController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 $idRegex = '[0-9]+';
 $slugRegex = '[0-9a-z\-]+';
 Route::get('/', [HomeController::class, 'index']);
@@ -48,3 +62,5 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('property', \App\Http\Controllers\Admin\PropertyController::class)->except(['show']);
     Route::resource('option', \App\Http\Controllers\Admin\OptionController::class)->except(['show']);
 });
+
+require __DIR__.'/auth.php';

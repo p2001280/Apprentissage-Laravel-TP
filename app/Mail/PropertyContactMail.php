@@ -30,7 +30,7 @@ class PropertyContactMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new Address('noreply@example.com', 'Your App Name'),
+            from: new Address('john@doe.fr', 'Your App Name'),
             to: 'admin@doe.fr',
             replyTo: $this->data['email'],
             subject: 'Property Contact Mail',

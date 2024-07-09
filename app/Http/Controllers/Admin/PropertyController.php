@@ -6,6 +6,7 @@ use App\Models\Option;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Admin\PropertyFormRequest;
+use Illuminate\Support\Facades\Auth; 
 
 class PropertyController extends Controller
 {
@@ -15,7 +16,7 @@ class PropertyController extends Controller
     public function index()
     {
         return view('admin.properties.index', [
-            'properties' => Property::orderBy('created_at', 'desc')->paginate(3)
+            'properties' => Property::orderBy('created_at', 'desc')->paginate(10)
         ]);
     }
 
@@ -69,6 +70,7 @@ class PropertyController extends Controller
      */
     public function edit(Property $property)
     {
+        dd(Auth::user()->can('delete'));
         return view('admin.properties.form', [
             'property' => $property,
             'options' => Option::pluck('name', 'id')

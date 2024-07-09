@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // Import correct de la façade Hash
 
 class HomeController extends Controller
 {
@@ -15,9 +16,6 @@ class HomeController extends Controller
         ->recent()
         ->limit(4)
         ->get();
-        $user = User::first();
-        $user->password = '0000';    
-        dd($user->password, $user);    
         return view('home', ['properties' => $properties]);
     }
 
