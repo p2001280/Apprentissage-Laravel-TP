@@ -34,9 +34,15 @@ Route::post('/biens/{property}/contact', [PropertyController::class, 'contact'])
         'property' => $idRegex
     ]);
 
-Route::get('/login', [AuthController::class], 'login')->name('login');
-Route::post('/login', [AuthController::class], 'login')->name('doLogin');
-Route::get('/logout', [AuthController::class], 'logout')->name('logout');
+    Route::get('/login', [AuthController::class, 'login'])
+        ->middleware('guest')
+        ->name('login');
+
+    Route::post('/login', [AuthController::class, 'doLogin']);
+    
+    Route::delete('/logout', [AuthController::class, 'logout'])
+        ->middleware('auth')
+        ->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('property', \App\Http\Controllers\Admin\PropertyController::class)->except(['show']);

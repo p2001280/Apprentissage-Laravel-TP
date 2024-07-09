@@ -6,10 +6,16 @@
 
 <h1>@yield('title')</h1>
 
-<form class="vstack gap-2 p-4" action="{{ route($property->exists ? 'admin.property.update' : 'admin.property.store', $property) }}" method="post">
+<form class="vstack gap-2 p-4" action="{{ route($property->exists ? 'admin.property.update' : 'admin.property.store', $property) }}" method="post" enctype="multipart/form-data">
     @csrf
     @method($property->exists ? 'put' : 'post')
-
+    <div class="form-group">
+        <label for="title">Image</label>
+        <input type="file" class="form-control" id="image" name="image" >
+        @error("image")
+        {{ $message }}
+        @enderror
+    </div>
     <div class="row">
         @include('shared.input', ['class' => 'col', 'label' => 'Titre', 'name' => 'title', 'value' => $property->title])
         <div class="col row">

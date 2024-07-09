@@ -18,6 +18,9 @@
     <div class="mt-4">
         <h4>Intéressé par ce bien ?</h4>
         @include('shared.flash')
+        @if($property->image)
+        <img style="width: 100%; height: 150px; object-fit:cover;" src ="{{ $property->imageUrl() }}" alt=""/>
+        @endif
         <form action="{{ route('property.contact', $property) }}" method="post" class="vstack gap-3">
             @csrf
             <div class="row">

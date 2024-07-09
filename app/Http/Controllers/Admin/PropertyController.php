@@ -24,16 +24,6 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        $property = new Property();
-        $property->fill([
-            'surface' => 40,
-            'rooms' => 3,
-            'bedrooms' => 1,
-            'floor' => 0,
-            'city' => 'Montpellier',
-            'postal_code' => 34000,
-            'sold' => false
-        ]);
         return view('admin.properties.form', [
             'property' => new Property(),
             'options' => Option::pluck('name', 'id')
@@ -45,7 +35,8 @@ class PropertyController extends Controller
      */
     public function store(PropertyFormRequest $request)
     {
-        $property = Property::create($request->validated());
+        // $property = Property::create($request->validated());
+        $property = Property::create($this->extractData(new Property(), $request));
         $property->options()->sync($request->validated('options'));
         return redirect()->route('admin.property.index')->with('success', 'Le bien a bien été créé');
     }
@@ -56,6 +47,21 @@ class PropertyController extends Controller
     public function show(string $id)
     {
         //
+    }
+
+    private function extractData(Property $property, PropertyFormRequest $request): array 
+    {
+        $data = $request->validated();
+        /** @var UploadedFile|null $image */
+        $image = $request->validated('image');
+        if($image === null || $image->getError()) {
+            return $data;
+        }
+        if($property->image) {
+            Storage::disk('public')->delete($property->image);
+        }
+        $data['image'] = $image->store('property', 'public');
+        return $data;
     }
 
     /**
@@ -75,7 +81,7 @@ class PropertyController extends Controller
     public function update(PropertyFormRequest $request, Property $property)
     {
         $property->options()->sync($request->validated('options'));
-        $property->update($request->validated());
+        $property->update($this->extractData(new Property(), $request));
         return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié avec succès !');
     }
 

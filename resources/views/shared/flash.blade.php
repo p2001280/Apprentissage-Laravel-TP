@@ -3,7 +3,6 @@
     {{ session('success') }}
 </div>
 @endif
-@yield('content')
 @if($errors->any()) 
 <div class="alert alert-danger">
 <ul class='my-0'>

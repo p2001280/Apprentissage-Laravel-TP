@@ -14,7 +14,7 @@ class PropertyController extends Controller
 {
 
     public function index(SearchPropertiesRequest $request) {
-        $query = Property::query()->orderBy('created_at', 'desc');
+        $query = Property::query()->whereNotNull('image')->where('image', '!=', '')->orderBy('created_at', 'desc');
         if($price = $request->validated('price')) {
             $query = $query->where('price', '<=', $price);
         }
@@ -32,7 +32,7 @@ class PropertyController extends Controller
         }
 
         return view('property.index', [
-            'properties' => $query->paginate(16),
+            'properties' => $query->paginate(16)->withTrashed(),
             'input' => $request->validated()
         ]);
     }
