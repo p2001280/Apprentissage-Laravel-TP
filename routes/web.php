@@ -48,19 +48,30 @@ Route::post('/biens/{property}/contact', [PropertyController::class, 'contact'])
         'property' => $idRegex
     ]);
 
-    Route::get('/login', [AuthController::class, 'login'])
-        ->middleware('guest')
-        ->name('login');
+Route::get('/login', [AuthController::class, 'login'])
+    ->middleware('guest')
+    ->name('login');
 
-    Route::post('/login', [AuthController::class, 'doLogin']);
-    
-    Route::delete('/logout', [AuthController::class, 'logout'])
-        ->middleware('auth')
-        ->name('logout');
+Route::post('/login', [AuthController::class, 'doLogin']);
+
+Route::delete('/logout', [AuthController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
 
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::resource('property', \App\Http\Controllers\Admin\PropertyController::class)->except(['show']);
     Route::resource('option', \App\Http\Controllers\Admin\OptionController::class)->except(['show']);
+});
+
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () use ($idRegex) {
+    Route::resource('property', \App\Http\Controllers\Admin\PropertyController::class)->except(['show']);
+    Route::resource('option', \App\Http\Controllers\Admin\OptionController::class)->except(['show']);
+    Route::delete('picture/{picture}', [\App\Http\Controllers\Admin\PictureController::class, 'destroy'])
+        ->name('picture.destroy')
+        ->where([
+            'picture' => $idRegex,
+        ])
+        ->can('delete', 'picutre');
 });
 
 require __DIR__.'/auth.php';
