@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Events\ContactRequestEvent;
 use App\Notifications\ContactRequestNotification;
 use Illuminate\Support\Facades\Notification; // Ajoutez cette ligne
+use App\Jobs\DemoJob;
 
 class PropertyController extends Controller
 {
@@ -43,8 +44,7 @@ class PropertyController extends Controller
 
     public function show(string $slug, Property $property) 
     {
-        // $user = User::first();
-        // dd($user->unreadNotifications);
+        DemoJob::dispatch($property)->delay(now()->addSeconds(10));
         $expectedSlug = $property->getSlug();
         if($slug !== $expectedSlug) {
             redirect()->route('property', ['slug' => $expectedSlug, 'property' => $property]);
@@ -57,10 +57,10 @@ class PropertyController extends Controller
 
     public function contact(Property $property, PropertyContactRequest $request)
     {
-        // ContactRequestEvent::dispatch($property, $request->validated());
+        ContactRequestEvent::dispatch($property, $request->validated());
+        Notification::route('mail', 'john@admin.fr')->notify(new ContactRequestNotification($property, $request->validated()));
         // $user = User::first();
         // $user->notify(new ContactRequestNotification($property, $request->validated()));
-        Notification::route('mail', 'john@admin.fr')->notify(new ContactRequestNotification($property, $request->validated()));
   
         return back()->with('success', ' Votre demande de contact a bien été envoyée');
     }

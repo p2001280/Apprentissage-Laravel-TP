@@ -8,7 +8,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Property;
 use Illuminate\Notifications\Notification;
 
-class ContactRequestNotification extends Notification
+class ContactRequestNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -35,6 +35,8 @@ class ContactRequestNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        sleep(2);
+        throw new \Exception('Une erreur est survenue');
         return (new MailMessage)
                     ->line('The introduction to the notification.')
                     ->action('Notification Action', url('/'))
