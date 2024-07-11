@@ -19,3 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/biens', [\App\Http\Controllers\Api\PropertyController::class, 'index']);
+Route::get('/weather', [\App\Http\Controllers\Api\WeatherController::class, 'index']);

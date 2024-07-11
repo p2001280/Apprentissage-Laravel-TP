@@ -10,9 +10,7 @@ class HomeController extends Controller
 {
 
     public function index() {
-        $properties = Property::whereNotNull('image')
-        ->where('image', '!=', '')
-        ->available()
+        $properties = Property::available()
         ->recent()
         ->limit(4)
         ->get();

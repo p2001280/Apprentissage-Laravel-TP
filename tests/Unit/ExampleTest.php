@@ -1,16 +1,22 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * A basic test example.
+     * A basic feature test example.
      */
-    public function test_that_true_is_true(): void
+    public function test_the_application_returns_a_successful_response(): void
     {
-        $this->assertTrue(true);
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertSee('Agence Maion');
     }
 }

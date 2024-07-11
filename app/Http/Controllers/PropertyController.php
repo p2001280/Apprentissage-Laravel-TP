@@ -19,7 +19,7 @@ class PropertyController extends Controller
 {
 
     public function index(SearchPropertiesRequest $request) {
-        $query = Property::query()->whereNotNull('image')->where('image', '!=', '')->orderBy('created_at', 'desc');
+        $query = Property::query()->orderBy('created_at', 'desc');
         if($price = $request->validated('price')) {
             $query = $query->where('price', '<=', $price);
         }
@@ -62,7 +62,7 @@ class PropertyController extends Controller
         // $user = User::first();
         // $user->notify(new ContactRequestNotification($property, $request->validated()));
   
-        return back()->with('success', ' Votre demande de contact a bien été envoyée');
+        return redirect()->back()->with('success', ' Votre demande de contact a bien été envoyée');
     }
 
 }
